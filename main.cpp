@@ -16,5 +16,6 @@ int main(int argc, char * argv[]){
     std::string * temp = new std::string(argv[1]);
     factoring test(temp);
     test.computingFactors();
+    test.userOutput();
     return 0;
 }

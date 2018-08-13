@@ -62,7 +62,7 @@ float factoring::findFactors(){
     if(tempNumbersForPoly.size() > 3 && tempNumbersForPoly.front() == 1){
         tempNumbersForPoly.pop_front();
     }
-    for(float i = 0; i <= largestNum(numbersForPoly); i += 1){ //SOMETHING IS BROKEN IN THIS FOR LOOP FIX AND DEBUG
+    for(float i = 0; i <= largestNum(numbersForPoly); i += 1){ 
         workingInElements = 0;
         for(std::list<float>::const_iterator start = tempNumbersForPoly.begin();
         start != tempNumbersForPoly.cend(); 
@@ -73,7 +73,7 @@ float factoring::findFactors(){
                 commonFactor = i;
             };
         }
-    } //x2+4x+4 * x+2      x3+4x2+4x_2x2+8x+8 = x3+6x2+12x+8
+    } 
 if(numbersForPoly.size() == 3){
     for(std::list<float>::iterator start = numbersForPoly.begin();
         start != numbersForPoly.end();
@@ -88,7 +88,7 @@ void factoring::computingFactors(){
     numbersForPoly = getNumbers(userInput);
     bool noFactors = false;
     while(true){
-        if(numbersForPoly.size() >= 3 ){
+        if(numbersForPoly.size() > 3 ){
             if (factoring::findFactors() == 1){
                 break;
             }
@@ -111,8 +111,7 @@ void factoring::computingFactorsX2(){
     typedef struct abcxComponenets{
         float a,b,c;
     } elements; 
-    elements polyElements; //1 7 10                -7 + 49 -40 /20 
-    //roots Roots;
+    elements polyElements; 
     std::list<float>::const_iterator beginList = numbersForPoly.cbegin();
     if (numbersForPoly.size() == 3){
         polyElements.a = *beginList; beginList++;
@@ -127,16 +126,24 @@ void factoring::computingFactorsX2(){
     (roots.push_back({quadraticFormula(polyElements, -1), 0.0}),
     roots.push_back({quadraticFormula(polyElements, 1), 0.0})) : 
     (roots.push_back({(-1 * polyElements.b ) / (2 * polyElements.a), sqrt(-1*(pow(polyElements.b,2)-(4*(polyElements.a * polyElements.c))))/ (2 * polyElements.a)}),
-    (roots.push_back({(-1 * polyElements.b ) / (2 * polyElements.a), sqrt(-1*(pow(polyElements.b,2)-(4*(polyElements.a * polyElements.c))))/ (2 * polyElements.a)})));
-    for(auto x : roots){
-        std::cout << "ROOT: " << x << std::endl;
-    }
+    (roots.push_back({(-1 * polyElements.b ) / (2 * polyElements.a), -1*sqrt(-1*(pow(polyElements.b,2)-(4*(polyElements.a * polyElements.c))))/ (2 * polyElements.a)})));
 }
 
 void factoring::userOutput(){
     std::string * factored = new std::string;
     int i = 0;
+    std::string operatr = "+";
     for(auto x : roots){
-        
+        -1*x.real() > 0 || x.imag() > 0 ? operatr="+" : operatr="-";
+        if(x.imag() == 0){
+            factored->insert(factored->size(),(("( x " + operatr + " ") + std::to_string(abs(x.real())) + " )"));
+        }
+        else{
+            factored->insert(factored->size(),(("( " + std::to_string((int)x.real()) + "x "  + operatr + " ") +  std::to_string((int)x.imag()) + "i )" ));
+        }
+    }
+    printf("%s\n", factored->c_str());
+        for(auto x : roots){
+            printf("Root: (real) %f (imag) %f \n", x.real(),x.imag());
     }
 }
