@@ -39,7 +39,12 @@
                     case '-':
                         numInverter = -1; break;
                     case '^':
-                        while(true){holdFiltered->pop_front();if(holdFiltered->front() != '+' || holdFiltered->front() != '-'){break;};}; //very strange how critea in if loop doesnt work in while loop
+                        while(true){
+                            holdFiltered->pop_front();
+                            if(holdFiltered->front() != '+' || holdFiltered->front() != '-'){
+                                break;
+                                };
+                            }; //very strange how critea in if loop doesnt work in while loop
                         break;
                 }
                 buildingNum.clear(); 

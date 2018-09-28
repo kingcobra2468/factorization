@@ -85,11 +85,18 @@ if(numbersForPoly.size() == 3){
 }
 
 void factoring::computingFactors(){
+    printf("here");
+    
     numbersForPoly = getNumbers(userInput);
+
+    for(auto x : numbersForPoly){
+        std::cout << x << std::endl;
+    }
     bool noFactors = false;
     while(true){
         if(numbersForPoly.size() > 3 ){
-            if (factoring::findFactors() == 1){
+            if (factoring::findFactors() == 1 && factoring::syntheticDivision(factoring::findFactors())){
+                
                 break;
             }
             else if(!factoring::syntheticDivision(factoring::findFactors())){
@@ -120,7 +127,7 @@ void factoring::computingFactorsX2(){
     }                    
     (pow(polyElements.b,2)-(4*(polyElements.a * polyElements.c))) > 0  || polyElements.b == 2 ? mri = true : false;
     
-    auto quadraticFormula = [](elements constants, int Operator){
+    auto quadraticFormula = [](elements constants, int Operator){ //lambda
         return ((-1 * constants.b ) + (Operator * sqrt(pow(constants.b,2)-(4*(constants.a * constants.c))))) / (2 * constants.a);};
     mri ?
     (roots.push_back({quadraticFormula(polyElements, -1), 0.0}),
