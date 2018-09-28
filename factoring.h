@@ -25,7 +25,7 @@ class factoring{
         bool isFloat(float input);
         void computingFactorsX2();
         void computingFactors();  
-        bool syntheticDivision(float factor);  
+        bool syntheticDivision(float factor, bool write);  
         void userOutput();
 };
 

@@ -19,6 +19,8 @@ std::list<float> getNumbers(commandLineArg input){
     return retrieveNms->numbers;
 }
 
+//FINDS LARGEST NUMBER
+
 float factoring::largestNum(std::list<float> numList){
     float largestNum;
     for(std::list<float>::const_iterator start = numbersForPoly.begin();
@@ -30,11 +32,15 @@ float factoring::largestNum(std::list<float> numList){
 
 }
 
+//CHECKS IF NUMBER IS A FLOAT
+
 bool factoring::isFloat(float input){
     return fmod(input, 1) != 0.0 ? true : false;
 }
 
-bool factoring::syntheticDivision(float factor){
+// PERFORMS SYNTHETIC DIVISION
+
+bool factoring::syntheticDivision(float factor, bool write){
     std::list<float> tempNums;
     factor*=-1;
     int * first = new int;
@@ -47,8 +53,11 @@ bool factoring::syntheticDivision(float factor){
         *first++;
         if(remainder != 0){tempNums.insert(itertor, remainder);};
     }
-    if (remainder == 0) {numbersForPoly = tempNums;};
-    roots.push_back({factor, 0});
+    if(write){
+        if (remainder == 0) {numbersForPoly = tempNums;};
+        roots.push_back({factor, 0});
+    }
+    
     return remainder == 0 ? true : false;
 }
 
@@ -59,9 +68,11 @@ float factoring::findFactors(){
     int workingInElements;
     std::list<float> tempNumbersForPoly;
     tempNumbersForPoly.assign(numbersForPoly.begin(), numbersForPoly.end());
+
     if(tempNumbersForPoly.size() > 3 && tempNumbersForPoly.front() == 1){
         tempNumbersForPoly.pop_front();
     }
+
     for(float i = 0; i <= largestNum(numbersForPoly); i += 1){ 
         workingInElements = 0;
         for(std::list<float>::const_iterator start = tempNumbersForPoly.begin();
@@ -74,42 +85,44 @@ float factoring::findFactors(){
             };
         }
     } 
-if(numbersForPoly.size() == 3){
-    for(std::list<float>::iterator start = numbersForPoly.begin();
-        start != numbersForPoly.end();
-        ++start){
-            *start /= commonFactor;
+
+    if(numbersForPoly.size() == 3){
+        for(std::list<float>::iterator start = numbersForPoly.begin();
+            start != numbersForPoly.end();
+            ++start){
+                *start /= commonFactor;
         }
     }
+    printf("Common Factor: %f\n", commonFactor);
     return commonFactor;
 }
 
 void factoring::computingFactors(){
-    printf("here");
-    
+
     numbersForPoly = getNumbers(userInput);
 
     for(auto x : numbersForPoly){
         std::cout << x << std::endl;
     }
     bool noFactors = false;
+
     while(true){
         if(numbersForPoly.size() > 3 ){
-            if (factoring::findFactors() == 1 && factoring::syntheticDivision(factoring::findFactors())){
-                
+            //if (factoring::findFactors() == 1 && factoring::syntheticDivision(factoring::findFactors())){
+            //
+            //}
+            if(!factoring::syntheticDivision(factoring::findFactors(), false)){
+                printf("Cannot be factored\n"); //Make method Factored Remaining
                 break;
             }
-            else if(!factoring::syntheticDivision(factoring::findFactors())){
-                printf("Cannot be factored\n");
-                break;
-            }
+            factoring::syntheticDivision(factoring::findFactors(), true);
         }
         else if(numbersForPoly.size() <= 3){
             factoring::computingFactorsX2();
             break;
         }
     }
-    if(noFactors){factoring::computingFactorsX2();};
+    //if(noFactors){factoring::computingFactorsX2();};
     
 }
 
