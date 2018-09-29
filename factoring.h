@@ -27,6 +27,7 @@ class factoring{
         void computingFactors();  
         bool syntheticDivision(float factor, bool write);  
         void userOutput();
+        std::string polynomilizeRemainder();
 };
 
 

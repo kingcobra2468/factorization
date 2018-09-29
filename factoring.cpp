@@ -97,6 +97,18 @@ float factoring::findFactors(){
     return commonFactor;
 }
 
+std::string factoring::polynomilizeRemainder(){
+    std::string buildingingPoly;
+    for(float coefficient : numbersForPoly){
+        if(numbersForPoly.size() > 2){
+            char * temp = new char[60];
+            sprintf(temp, "%fx^%i", coefficient, buildingingPoly.size() -2);
+            buildingingPoly.append(temp, buildingingPoly.size());
+            delete temp;
+        }
+    }
+}
+
 void factoring::computingFactors(){
 
     numbersForPoly = getNumbers(userInput);
