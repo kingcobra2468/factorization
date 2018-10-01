@@ -10,7 +10,6 @@
 #include "commandLineIn.h"
 #include "factoring.h"
 
-
 factoring::factoring(std::string * stringArg) : userInput(stringArg){
 }
 
@@ -93,32 +92,63 @@ float factoring::findFactors(){
                 *start /= commonFactor;
         }
     }
-    printf("Common Factor: %f\n", commonFactor);
+    //printf("Common Factor: %f\n", commonFactor);
     return commonFactor;
 }
 
+//FINISH WORKING ON THIS
+
 std::string factoring::polynomilizeRemainder(){
-    std::string buildingingPoly;
-    for(float coefficient : numbersForPoly){
-        if(numbersForPoly.size() > 2){
-            char * temp = new char[60];
-            sprintf(temp, "%fx^%i", coefficient, buildingingPoly.size() -2);
-            buildingingPoly.append(temp, buildingingPoly.size());
-            delete temp;
-        }
+    if(numbersForPoly.empty()){
+        return "";
     }
-}
+    else{
+        std::string buildingingPoly = "(";
+        short remainderSize = numbersForPoly.size();
+        for(float coefficient : numbersForPoly){
+            if(remainderSize > 1){
+                if(coefficient < 0){
+                    buildingingPoly+= "-" + std::to_string((int)coefficient) + "x^" + std::to_string(remainderSize-1);
+                }
+                else{
+                    if(remainderSize == numbersForPoly.size()){
+                        buildingingPoly+= std::to_string((int)coefficient) + "x^" + std::to_string(remainderSize-1);
+                    }
+                    else{
+                        buildingingPoly+= "+" + std::to_string((int)coefficient) + "x^" + std::to_string(remainderSize-1);
+                    }
+
+                }
+            }
+            else{
+               if(coefficient < 0){
+                    buildingingPoly+= "-" + std::to_string((int)coefficient) + ")";
+                }
+                else{
+                    buildingingPoly+= "+" + std::to_string((int)coefficient)+ ")";
+                }
+            }
+        remainderSize--;
+        }
+        
+        return buildingingPoly;
+    }
+}   
 
 void factoring::computingFactors(){
 
     numbersForPoly = getNumbers(userInput);
 
-    for(auto x : numbersForPoly){
-        std::cout << x << std::endl;
-    }
+    
     bool noFactors = false;
 
     while(true){
+        for(auto x : numbersForPoly){
+        std::cout << x << std::endl;
+        }
+        for(auto x : roots){
+        std::cout << x << std::endl;
+        }
         if(numbersForPoly.size() > 3 ){
             //if (factoring::findFactors() == 1 && factoring::syntheticDivision(factoring::findFactors())){
             //
@@ -149,16 +179,24 @@ void factoring::computingFactorsX2(){
         polyElements.a = *beginList; beginList++;
         polyElements.b = *beginList; beginList++;
         polyElements.c = *beginList;
-    }                    
-    (pow(polyElements.b,2)-(4*(polyElements.a * polyElements.c))) > 0  || polyElements.b == 2 ? mri = true : false;
-    
+    }  
+    std::cout << polyElements.a << " " << polyElements.b << " " << polyElements.c << std::endl;                  
+    (pow(polyElements.b,2)-(4*(polyElements.a * polyElements.c))) >= 0  || polyElements.b == 2 ? mri = true : false;
+
     auto quadraticFormula = [](elements constants, int Operator){ //lambda
         return ((-1 * constants.b ) + (Operator * sqrt(pow(constants.b,2)-(4*(constants.a * constants.c))))) / (2 * constants.a);};
-    mri ?
-    (roots.push_back({quadraticFormula(polyElements, -1), 0.0}),
-    roots.push_back({quadraticFormula(polyElements, 1), 0.0})) : 
+    if(mri){
+        if(std::to_string(quadraticFormula(polyElements, -1)).substr(std::to_string(quadraticFormula(polyElements, -1)).find(".")).size() < 3){
+            roots.push_back({quadraticFormula(polyElements, -1), 0.0});
+            roots.push_back({quadraticFormula(polyElements, 1), 0.0});
+            numbersForPoly.clear();
+        }  
+    }
+    else{
     (roots.push_back({(-1 * polyElements.b ) / (2 * polyElements.a), sqrt(-1*(pow(polyElements.b,2)-(4*(polyElements.a * polyElements.c))))/ (2 * polyElements.a)}),
-    (roots.push_back({(-1 * polyElements.b ) / (2 * polyElements.a), -1*sqrt(-1*(pow(polyElements.b,2)-(4*(polyElements.a * polyElements.c))))/ (2 * polyElements.a)})));
+    (roots.push_back({(-1 * polyElements.b ) / (2 * polyElements.a), -1*sqrt(-1*(pow(polyElements.b,2)-(4*(polyElements.a * polyElements.c))))/ (2 * polyElements.a)})),
+    numbersForPoly.clear());
+    }
 }
 
 void factoring::userOutput(){
@@ -174,7 +212,7 @@ void factoring::userOutput(){
             factored->insert(factored->size(),(("( " + std::to_string((int)x.real()) + "x "  + operatr + " ") +  std::to_string((int)x.imag()) + "i )" ));
         }
     }
-    printf("%s\n", factored->c_str());
+    printf("%s %s\n", factored->c_str(), factoring::polynomilizeRemainder().c_str());
         for(auto x : roots){
             printf("Root: (real) %f (imag) %f \n", x.real(),x.imag());
     }
